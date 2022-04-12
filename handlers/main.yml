@@ -3,8 +3,3 @@
   service:
     name: netdata
     state: restarted
-
-- name: reload netdata
-  service:
-    name: netdata
-    state: reloaded
