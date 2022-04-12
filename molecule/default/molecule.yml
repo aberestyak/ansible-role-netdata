@@ -1,0 +1,55 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint --force-color
+  flake8
+platforms:
+  - &platform-basic
+    name: molecule-netdata-sles-${CI_JOB_ID:-1}
+    image: ${CI_REGISTRY}/rshbintech/integrations/ckpr/infra/images/sles12sp5-systemd:${IMAGE_TAG__SLES_REGISTERED}
+    registry:
+      url: ${CI_REGISTRY}
+      credentials:
+        username: ${CI_REGISTRY_USER}
+        password: ${CI_REGISTRY_PASSWORD}
+    pre_build_image: true
+    # Need for dind in k8s with calico CNI (docker run with "--iptables=false --ip-masq=false", and calico doesn't managed dind networks)
+    network_mode: host
+    command: /usr/lib/systemd/systemd
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    stop_signal: "SIGRTMIN+3"
+    privileged: false
+    capabilities:
+      - SYS_ADMIN  # For systemd
+    env:
+      https_proxy: "${HTTPS_PROXY}"
+      http_proxy: "${HTTP_PROXY}"
+      no_proxy: "${NO_PROXY}"
+    # buildargs:
+    #   https_proxy: ${HTTPS_PROXY}
+    #   http_proxy: ${HTTP_PROXY}
+    #   no_proxy: ${NO_PROXY}
+provisioner:
+  name: ansible
+  log: true
+  config_options:
+    defaults:
+      stdout_callback: debug
+      error_on_undefined_vars: true
+      callback_whitelist: profile_tasks
+    diff:
+      always: true
+  inventory:
+    host_vars:
+      molecule-netdata-sles-${CI_JOB_ID:-1}:
+        ansible_python_interpreter: /usr/bin/python3.6
+verifier:
+  name: testinfra
+  options:
+    verbose: true

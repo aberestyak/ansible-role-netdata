@@ -1,0 +1,12 @@
+---
+# Used only for Redhat installation, enables source netdata repo.
+netdata_yum_repo_enabled: true
+
+# The name of the netdata packages to install.
+netdata_package_name: "netdata"
+
+netdata_service_state: started
+netdata_service_enabled: true
+
+netdata_conf_template: "netdata.conf.j2"
+netdata_conf_file_path:

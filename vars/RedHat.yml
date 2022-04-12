@@ -1,0 +1,4 @@
+---
+root_group: root
+netdata_conf_path: /etc/netdata/netdata.conf
+__netdata_user: "netdata"

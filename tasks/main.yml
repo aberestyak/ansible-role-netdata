@@ -1,0 +1,30 @@
+---
+# Variable setup.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define netdata_user.
+  set_fact:
+    netdata_user: "{{ __netdata_user }}"
+  when: netdata_user is not defined
+
+# Setup/install tasks.
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+# Netdata setup.
+- name: Copy netdata configuration in place.
+  template:
+    src: "{{ netdata_conf_template }}"
+    dest: "{{ netdata_conf_file }}"
+    owner: root
+    group: "{{ root_group }}"
+    mode: 0644
+  notify:
+    - reload netdata
+
+- name: Ensure netdata service is running as configured.
+  service:
+    name: netdata
+    state: "{{ netdata_service_state }}"
+    enabled: "{{ netdata_service_enabled }}"

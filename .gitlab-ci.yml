@@ -1,0 +1,14 @@
+---
+include:
+  - project: rshbintech/integrations/ckpr/ci-cd/base
+    file: build/services-docker.yml
+    ref: 0.7.25
+  - project: rshbintech/integrations/ckpr/ci-cd/base
+    file: test/test-molecule.yml
+    ref: 0.7.25
+
+stages:
+  - test
+
+molecule:
+  extends: .molecule
