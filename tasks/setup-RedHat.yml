@@ -3,7 +3,6 @@
   package:
     name: epel-release
     state: latest
-    become: true
   when: netdata_yum_repo_enabled | bool
 
 - name: Ensure netdata is installed.
