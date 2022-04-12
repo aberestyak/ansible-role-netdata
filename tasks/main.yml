@@ -20,8 +20,6 @@
     owner: root
     group: "{{ root_group }}"
     mode: 0644
-  notify:
-    - reload netdata
 
 - name: Ensure netdata service is running as configured.
   service:
