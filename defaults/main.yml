@@ -9,4 +9,3 @@ netdata_service_state: started
 netdata_service_enabled: true
 
 netdata_conf_template: "netdata.conf.j2"
-netdata_conf_file_path:
